@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <iostream>
 #include <cstdio>
+#include <direct.h>
 using namespace std;
 void file_copy(char* source, char* dest);
 void reculsive_search(char* SCpath, char* DTpath);
@@ -25,8 +26,8 @@ void file_copy(char* source, char* dest) {
 	_finddata64i32_t DT_fd;
 
 	long SC_handle = _findfirst(source, &SC_fd);         // 수정날짜 비교
-	long DT_handle = _findfirst(source, &DT_fd);
-	if (SC_fd.time_write > DT_fd.time_write || SC_fd.attrib == 16) {      // 해당파일이 폴더이거나 수정된 파일일 경우에 파일을 복사한다.
+	long DT_handle = _findfirst(dest, &DT_fd);
+	if ((SC_fd.time_write != DT_fd.time_write) || SC_fd.attrib == 16) {      // 해당파일이 폴더이거나 수정된 파일일 경우에 파일을 복사한다.
 		char buf[BUFSIZ];
 		size_t size;
 
@@ -34,13 +35,18 @@ void file_copy(char* source, char* dest) {
 		FILE* fdest;
 		fopen_s(&fsource, source, "rb");
 		fopen_s(&fdest, dest, "wb");
-
-		while (size = fread(buf, 1, BUFSIZ, fsource)) {
-			fwrite(buf, 1, size, fdest);
+		if (SC_fd.attrib == 16) {
+			char ss[100];
+			sprintf(ss, "%s%s%s", dest, "\\", SC_fd.name);
+			_mkdir(ss);
 		}
-
-		fclose(fsource);
-		fclose(fdest);
+		else {
+			while (size = fread(buf, 1, BUFSIZ, fsource)) {
+				fwrite(buf, 1, size, fdest);
+			}
+			fclose(fsource);
+			fclose(fdest);
+		}
 	}
 	return ;
 }
