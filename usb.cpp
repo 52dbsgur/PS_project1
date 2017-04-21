@@ -26,7 +26,7 @@ void file_copy(char* source, char* dest) {
 
 	long SC_handle = _findfirst(source, &SC_fd);         // 수정날짜 비교
 	long DT_handle = _findfirst(source, &DT_fd);
-	if (SC_fd.time_write > DT_fd.time_write && SC_fd.attrib == 16) {      // 해당파일이 폴더이거나 수정된 파일일 경우에 파일을 복사한다.
+	if (SC_fd.time_write > DT_fd.time_write || SC_fd.attrib == 16) {      // 해당파일이 폴더이거나 수정된 파일일 경우에 파일을 복사한다.
 		char buf[BUFSIZ];
 		size_t size;
 
