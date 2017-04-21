@@ -9,13 +9,13 @@ void reculsive_search(char* SCpath, char* DTpath);
 
 void main()
 {
-	char* source_path[1000];
-	char* destination_path[1000];
+	char source_path[1000];
+	char destination_path[1000];
 
-	scanf("%c", source_path);                    
-	scanf("%c", destination_path);
+	scanf("%s", &source_path);                    
+	scanf("%s", &destination_path);
 
-	reculsive_search(*source_path, *destination_path);
+	reculsive_search(source_path, destination_path);
 	system("pause");
 	return;
 }
